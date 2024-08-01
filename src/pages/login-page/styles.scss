@@ -1,16 +1,19 @@
 .container {
+  display: flex;
+  align-items: flex-end;
   width: 100dvw;
   height: 100dvh;
-  ////background: rgba(225, 219, 219, 0.06);
-  //background: linear-gradient(90deg, rgb(67, 66, 87) 0%, rgba(40,74,63,1) 35%, rgba(0,212,255,1) 100%);
   background-image: linear-gradient(to top, #6a85b6 0%, #bac8e0 100%);
 }
 
 .form {
+  gap: 50%;
   width: 420px;
-  height: 420px;
+  height: 75%;
+  justify-content: flex-start;
   background-color: #fff;
-  border-radius: 2%;
+  border-top-right-radius: 12px;
+  border-top-left-radius: 12px;
   box-shadow: 0 0 0 1px rgba(135, 135, 178, 0.2);
-  padding: 0 48px;
+  padding: 24px 48px;
 }

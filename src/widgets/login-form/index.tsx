@@ -26,7 +26,6 @@ export const LoginForm = () => {
   const handleSubmit = methods.handleSubmit((data) => {
     loginMutation(data, {
       onSuccess: (data) => {
-        console.log(data);
         setAuthorizedData(data.login);
         navigation("/main");
       },
@@ -36,14 +35,14 @@ export const LoginForm = () => {
   return (
     <FormProvider {...methods}>
       <form onSubmit={handleSubmit} className="login-form">
-        <InputFormField width={"200px"} name="login" label={t("label:login")} />
+        <InputFormField width={"200px"} name="login" label={t("label.login")} />
         <InputFormField
           width={"200px"}
           name="password"
-          label={t("label:password")}
+          label={t("label.password")}
           type="password"
         />
-        <Button htmlType="submit">{t("buttons:signIn")}</Button>
+        <Button htmlType="submit">{t("buttons.signIn")}</Button>
       </form>
     </FormProvider>
   );

@@ -1,4 +1,11 @@
-import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
+import {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { GraphqlClient } from "@payment-front/shared/api/GraphqlClient.ts";
 import { ConfigContextType } from "@payment-front/features/config-provider/types.ts";
 import { refreshQuery } from "@payment-front/features/config-provider/refreshQuery.ts";
@@ -12,36 +19,57 @@ export const ConfigProvider: FCC<{ env: { baseUrl: string } }> = ({
   const [isAuthorized, setIsAuthorized] = useState(false);
   const [client] = useState(new GraphqlClient({ baseUrl: env.baseUrl }));
   const refreshTimerRef = useRef<NodeJS.Timeout>();
-  const { updateAccessToken, deleteAccessToken, accessTokenExist } =
+  const { updateAccessToken, deleteAccessToken, getAccessToken } =
     useAccessStorage();
 
+  const setAuthorizationHeaders = useCallback(
+    (accessToken: unknown) => {
+      if (typeof accessToken === "string") {
+        client.updateHeaders("Authorization", `Bearer ${accessToken}`);
+      }
+    },
+    [client],
+  );
+
   useLayoutEffect(() => {
-    if (accessTokenExist()) {
+    const accessToken = getAccessToken();
+    if (accessToken) {
+      setAuthorizationHeaders(accessToken);
       setIsAuthorized(true);
     }
-  }, [accessTokenExist]);
+  }, [getAccessToken, setAuthorizationHeaders]);
+
+  useEffect(() => {
+    if (!isAuthorized && refreshTimerRef.current) {
+      deleteAccessToken();
+      clearTimeout(refreshTimerRef.current);
+    }
+  }, [deleteAccessToken, isAuthorized]);
 
   useEffect(() => {
     if (isAuthorized && !refreshTimerRef.current) {
       refreshTimerRef.current = setInterval(async () => {
-        const token = await client.request<string>({ document: refreshQuery });
-        updateAccessToken(token);
+        const token = await client.request<{ refreshSession: string }>({
+          document: refreshQuery,
+        });
+        updateAccessToken(token.refreshSession);
+        setAuthorizationHeaders(token.refreshSession);
       }, 270_000);
     }
-
-    return () => {
-      if (refreshTimerRef.current) {
-        deleteAccessToken();
-        clearTimeout(refreshTimerRef.current);
-      }
-    };
-  }, [client, deleteAccessToken, isAuthorized, updateAccessToken]);
+  }, [
+    client,
+    deleteAccessToken,
+    isAuthorized,
+    setAuthorizationHeaders,
+    updateAccessToken,
+  ]);
 
   useEffect(() => {
-    if (isAuthorized && !accessTokenExist()) {
+    const accessToken = getAccessToken();
+    if (isAuthorized && !accessToken?.length) {
       setIsAuthorized(false);
     }
-  }, [accessTokenExist, isAuthorized]);
+  }, [getAccessToken, isAuthorized]);
 
   const ctx = useMemo<ConfigContextType>(
     () => ({
@@ -49,10 +77,11 @@ export const ConfigProvider: FCC<{ env: { baseUrl: string } }> = ({
       isAuthorized,
       setAuthorizedData: (accessToken) => {
         updateAccessToken(accessToken);
+        setAuthorizationHeaders(accessToken);
         setIsAuthorized(true);
       },
     }),
-    [client, isAuthorized, updateAccessToken],
+    [client, isAuthorized, setAuthorizationHeaders, updateAccessToken],
   );
 
   return (

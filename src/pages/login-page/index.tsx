@@ -16,7 +16,7 @@ export const LoginPage = () => {
         gap="24px"
       >
         <LoginForm />
-        <NavLink to="/sign-up">{t("links:signUp")}?</NavLink>
+        <NavLink to="/sign-up">{t("links.signUp")}?</NavLink>
       </Flex>
     </Flex>
   );

@@ -6,10 +6,10 @@ import { useAuthorization } from "@payment-front/features";
 const UnauthorizedRoutes = () => {
   return (
     <Routes>
-      <Route path="/">
+      <Route>
         <Route path="/sign-in" element={<LoginPage />} />
         <Route path="/sign-up" element={<RegistrationPage />} />
-        <Route path="/" element={<Navigate to="/sign-in" />} />
+        <Route path="*" element={<Navigate to="/sign-in" />} />
       </Route>
     </Routes>
   );
@@ -18,7 +18,10 @@ const UnauthorizedRoutes = () => {
 const AuthorizedRoutes = () => {
   return (
     <Routes>
-      <Route path="/main" Component={() => <div>Main screen</div>} />
+      <Route>
+        <Route path="/main" Component={() => <div>Main screen</div>} />
+        <Route path="*" element={<Navigate to="/main" />} />
+      </Route>
     </Routes>
   );
 };

@@ -6,7 +6,13 @@ export class GraphqlClient {
   private readonly client: Client;
 
   public constructor({ baseUrl }: GraphqlClientConstructorParams) {
-    this.client = new Client(baseUrl);
+    this.client = new Client(baseUrl, {
+      credentials: "include",
+      headers: {
+        "Access-Control-Allow-Credentials": "true",
+      },
+      errorPolicy: "all",
+    });
   }
 
   public updateHeaders(key: string, value: string): GraphqlClient {
