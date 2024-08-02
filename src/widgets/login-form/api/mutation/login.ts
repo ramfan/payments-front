@@ -16,7 +16,10 @@ export const useLoginMutation = () => {
     { login: string; password: string }
   >({
     mutationFn: (variables: { login: string; password: string }) => {
-      return gqlClient.request({ document: loginMutation, variables });
+      return gqlClient.request<{ login: string }>({
+        document: loginMutation,
+        variables,
+      });
     },
   });
 

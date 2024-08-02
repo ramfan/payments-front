@@ -6,7 +6,7 @@ import {
   useRef,
   useState,
 } from "react";
-import { GraphqlClient } from "@payment-front/shared/api/GraphqlClient.ts";
+import { GraphqlClient } from "@payment-front/shared/api/";
 import { ConfigContextType } from "@payment-front/features/config-provider/types.ts";
 import { refreshQuery } from "@payment-front/features/config-provider/refreshQuery.ts";
 import { useAccessStorage } from "@payment-front/shared/hooks/use-access-storage.tsx";
