@@ -26,22 +26,9 @@ export class ErrorBuilder {
 }
 
 class GraphQLError extends Error {
-  constructor(message?: string) {
-    super(message);
-
-    Object.defineProperty(this, "name", {
-      value: new.target.name,
-      enumerable: false,
-      configurable: true,
-    });
-
-    Object.setPrototypeOf(this, new.target.prototype);
-
-    const captureStackTrace = Error.captureStackTrace;
-
-    if (typeof captureStackTrace === "function") {
-      captureStackTrace(this, this.constructor);
-    }
+  constructor(msg: string) {
+    super(msg);
+    super.name = "GraphQLError";
   }
 }
 
