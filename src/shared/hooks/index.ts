@@ -1,1 +1,1 @@
-export { useAuthService } from "./use-access-storage.tsx";
+export { useAccessStorage } from "./use-access-storage.tsx";
