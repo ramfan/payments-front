@@ -2,6 +2,7 @@ export const enum GQLErrorTypes {
   BadRequest = "BAD_REQUEST_ERROR",
   BadCredentials = "BAD_CREDENTIALS_ERROR",
   SchemaValidation = "SCHEMA_VALIDATION_ERROR",
+  AccessDenied = "ACCESS_DENIED_ERROR",
   Unknown = "UNKNOWN_ERROR",
 }
 
@@ -19,6 +20,10 @@ export class ErrorBuilder {
 
     if (msg?.includes("Validation error")) {
       errorInstance = new SchemaValidationException();
+    }
+
+    if (msg?.includes("Access Denied")) {
+      errorInstance = new AccessDeniedException();
     }
 
     return errorInstance;
@@ -53,5 +58,11 @@ class UnknownException extends GraphQLError {
 class SchemaValidationException extends GraphQLError {
   constructor() {
     super(GQLErrorTypes.SchemaValidation);
+  }
+}
+
+class AccessDeniedException extends GraphQLError {
+  constructor() {
+    super(GQLErrorTypes.AccessDenied);
   }
 }
