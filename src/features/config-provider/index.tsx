@@ -6,7 +6,10 @@ import {
   useRef,
   useState,
 } from "react";
-import { GraphqlClient } from "@payment-front/shared/api/";
+import {
+  GraphqlClient,
+  UnauthorizedException,
+} from "@payment-front/shared/api/";
 import { ConfigContextType } from "@payment-front/features/config-provider/types.ts";
 import { refreshQuery } from "@payment-front/features/config-provider/refreshQuery.ts";
 import { useAccessStorage } from "@payment-front/shared/hooks/use-access-storage.tsx";
@@ -49,11 +52,18 @@ export const ConfigProvider: FCC<{ env: { baseUrl: string } }> = ({
   useEffect(() => {
     if (isAuthorized && !refreshTimerRef.current) {
       refreshTimerRef.current = setInterval(async () => {
-        const token = await client.request<{ refreshSession: string }>({
-          document: refreshQuery,
-        });
-        updateAccessToken(token.refreshSession);
-        setAuthorizationHeaders(token.refreshSession);
+        try {
+          const token = await client.request<{ refreshSession: string }>({
+            document: refreshQuery,
+          });
+          updateAccessToken(token.refreshSession);
+          setAuthorizationHeaders(token.refreshSession);
+        } catch (error) {
+          if (error instanceof UnauthorizedException) {
+            deleteAccessToken();
+            setIsAuthorized(false);
+          }
+        }
       }, 270_000);
     }
   }, [

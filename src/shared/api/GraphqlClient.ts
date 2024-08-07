@@ -1,6 +1,6 @@
 import { GraphQLClient as Client } from "graphql-request";
 
-import { ErrorBuilder } from "@payment-front/shared/api/gql-errors.ts";
+import { ErrorBuilder } from "@payment-front/shared/api";
 
 export type GraphqlClientConstructorParams = { baseUrl: string };
 
@@ -30,13 +30,7 @@ export class GraphqlClient {
 
       return data;
     } catch (error: unknown) {
-      const errorMessage = (error as Error)?.message;
-      const errorInstance =
-        ErrorBuilder.getErrorInstanceByMessage(errorMessage);
-
-      console.error(errorInstance);
-
-      throw errorInstance;
+      throw ErrorBuilder.getErrorInstanceByMessage(error);
     }
   }
 }
