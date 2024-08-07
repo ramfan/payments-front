@@ -12,7 +12,7 @@ import {
 } from "@payment-front/shared/api/";
 import { ConfigContextType } from "@payment-front/features/config-provider/types.ts";
 import { refreshQuery } from "@payment-front/features/config-provider/refreshQuery.ts";
-import { useAccessStorage } from "@payment-front/shared/hooks/use-access-storage.tsx";
+import { useAccessStorage } from "@payment-front/shared/hooks";
 import { ConfigContext } from "@payment-front/features/config-provider/config-context.tsx";
 
 export const ConfigProvider: FCC<{ env: { baseUrl: string } }> = ({
