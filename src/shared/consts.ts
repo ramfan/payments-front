@@ -1,0 +1,4 @@
+export const CREDIT_TYPE = {
+  CONSUMER_LOAN: "CONSUMER_LOAN",
+  MORTGAGE: "MORTGAGE",
+} as const;

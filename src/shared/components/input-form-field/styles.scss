@@ -1,4 +1,6 @@
+@import "src/variables";
+
 .input-form-field {
-  height: 40px;
+  height: $form-field-height;
   padding-top: 14px
 }

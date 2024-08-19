@@ -2,6 +2,7 @@ import { Navigate, Route, Routes } from "react-router";
 import { RegistrationPage, LoginPage } from "@payment-front/pages";
 
 import { useAuthorization } from "@payment-front/features";
+import { MainPage } from "@payment-front/pages/main-page";
 
 const UnauthorizedRoutes = () => {
   return (
@@ -19,7 +20,7 @@ const AuthorizedRoutes = () => {
   return (
     <Routes>
       <Route>
-        <Route path="/main" Component={() => <div>Main screen</div>} />
+        <Route path="/main" element={<MainPage />} />
         <Route path="*" element={<Navigate to="/main" />} />
       </Route>
     </Routes>

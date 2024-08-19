@@ -1,0 +1,20 @@
+@import "src/variables";
+
+.date-picker-form-field {
+  height: $form-field-height;
+  width: 100%;
+
+  & > .ant-picker-input {
+    padding-top: 14px;
+    font-size: 14px;
+    position: relative;
+
+    & > .ant-picker-suffix{
+      position: absolute;
+      right: 0;
+      top: 12px;
+    }
+  }
+
+
+}

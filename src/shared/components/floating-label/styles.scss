@@ -1,6 +1,5 @@
 .float-label {
   position: relative;
-  margin-bottom: 12px;
 }
 
 .label {
@@ -9,11 +8,11 @@
   position: absolute;
   pointer-events: none;
   left: 12px;
-  top: 12px;
+  top: 18px;
   transition: 0.2s ease all;
 }
 
 .label-float {
   top: 6px;
-  font-size: 10px;
+  font-size: 12px;
 }

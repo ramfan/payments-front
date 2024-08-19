@@ -1,0 +1,10 @@
+@import "src/variables";
+
+.select-form-field {
+  height: $form-field-height;
+  width: 100%;
+  & > .ant-select-selector > .ant-select-selection-item {
+    padding-top: 14px;
+    font-size: 14px;
+  }
+}

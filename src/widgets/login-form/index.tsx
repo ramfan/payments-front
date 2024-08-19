@@ -9,6 +9,7 @@ import "./styles.scss";
 import { useAuthorization } from "@payment-front/features";
 import { useNavigate } from "react-router";
 import { useState } from "react";
+import { GQLErrorTypes } from "@payment-front/shared/api";
 
 export const LoginForm = () => {
   const { t } = useTranslation();
@@ -25,6 +26,10 @@ export const LoginForm = () => {
     ),
   });
 
+  const errorMessage: Record<string, string> = {
+    [GQLErrorTypes.BadCredentials]: t("error.invalidLoginOrPassword"),
+  };
+
   const handleSubmit = methods.handleSubmit((data) => {
     loginMutation(data, {
       onSuccess: (data) => {
@@ -39,11 +44,17 @@ export const LoginForm = () => {
 
   return (
     <FormProvider {...methods}>
-      {loginError && <Alert message={loginError} type="error" />}
+      {loginError && (
+        <Alert
+          className="login-error-alert"
+          message={errorMessage[loginError] ?? t("error.unknownError")}
+          type="error"
+        />
+      )}
       <form onSubmit={handleSubmit} className="login-form">
-        <InputFormField width={"200px"} name="login" label={t("label.login")} />
+        <InputFormField width="200px" name="login" label={t("label.login")} />
         <InputFormField
-          width={"200px"}
+          width="200px"
           name="password"
           label={t("label.password")}
           type="password"
