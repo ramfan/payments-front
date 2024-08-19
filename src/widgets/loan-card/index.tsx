@@ -36,6 +36,8 @@ export const LoanCard: FC<{ loanData?: TCredit; className?: string }> = ({
   const cardTitle =
     loanData?.creditType && loanTitleByType[loanData.creditType];
 
+  const creditName = loanData?.name && `(${loanData?.name})`;
+
   return (
     <>
       <Card onClick={() => setIsDrawerOpened(true)} className={cn(className)}>
@@ -44,6 +46,10 @@ export const LoanCard: FC<{ loanData?: TCredit; className?: string }> = ({
             <PlusOutlined />
             &nbsp;
             {t("buttons.add")}
+          </>
+        ) : creditName ? (
+          <>
+            {cardTitle}&nbsp;{creditName}
           </>
         ) : (
           cardTitle
