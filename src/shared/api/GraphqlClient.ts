@@ -1,14 +1,31 @@
 import { GraphQLClient as Client } from "graphql-request";
 
-import { ErrorBuilder } from "@payment-front/shared/api";
+import { ErrorBuilder, UnauthorizedException } from "@payment-front/shared/api";
 
-export type GraphqlClientConstructorParams = { baseUrl: string };
+export type GraphqlClientConstructorParams = {
+  baseUrl: string;
+  onUnauthorized?: () => void;
+};
 
 export class GraphqlClient {
   private readonly client: Client;
 
-  public constructor({ baseUrl }: GraphqlClientConstructorParams) {
-    this.client = new Client(baseUrl, { credentials: "include" });
+  public constructor({
+    baseUrl,
+    onUnauthorized,
+  }: GraphqlClientConstructorParams) {
+    this.client = new Client(baseUrl, {
+      credentials: "include",
+      responseMiddleware: (res) => {
+        if (res instanceof Error) {
+          const err = ErrorBuilder.getErrorInstanceByMessage(res);
+
+          if (err instanceof UnauthorizedException) {
+            onUnauthorized?.();
+          }
+        }
+      },
+    });
   }
 
   public updateHeaders(key: string, value: string): GraphqlClient {

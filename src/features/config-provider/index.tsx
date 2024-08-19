@@ -20,10 +20,19 @@ export const ConfigProvider: FCC<{ env: { baseUrl: string } }> = ({
   env,
 }) => {
   const [isAuthorized, setIsAuthorized] = useState(false);
-  const [client] = useState(new GraphqlClient({ baseUrl: env.baseUrl }));
-  const refreshTimerRef = useRef<NodeJS.Timeout | null>();
   const { updateAccessToken, deleteAccessToken, getAccessToken } =
     useAccessStorage();
+
+  const [client] = useState(
+    new GraphqlClient({
+      baseUrl: env.baseUrl,
+      onUnauthorized: () => {
+        deleteAccessToken();
+        setIsAuthorized(false);
+      },
+    }),
+  );
+  const refreshTimerRef = useRef<NodeJS.Timeout | null>();
 
   const setAuthorizationHeaders = useCallback(
     (accessToken: unknown) => {
