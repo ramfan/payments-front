@@ -25,6 +25,12 @@ const addCreditMutation = gql`
   }
 `;
 
+const removeCreditMutation = gql`
+  mutation removeCredit($id: ID!) {
+    removeCredit(id: $id)
+  }
+`;
+
 export type AddCreditMutationVariables = {
   name?: string;
   credit_size: number;
@@ -36,18 +42,32 @@ export type AddCreditMutationVariables = {
 
 export const useCreditMutation = () => {
   const gqlClient = useGQLClient();
-  const { mutate, isPending } = useMutation<
-    { id: number },
-    Error,
-    AddCreditMutationVariables
-  >({
-    mutationFn: (variables: AddCreditMutationVariables) => {
+  const { mutate: addCreditMutate, isPending: isAddCreditMutationPending } =
+    useMutation<{ id: number }, Error, AddCreditMutationVariables>({
+      mutationFn: (variables: AddCreditMutationVariables) => {
+        return gqlClient.request<{ id: number }>({
+          document: addCreditMutation,
+          variables,
+        });
+      },
+    });
+
+  const {
+    mutate: removeCreditMutate,
+    isPending: isRemoveCreditMutationPending,
+  } = useMutation<{ id: number }, Error, { id: number }>({
+    mutationFn: (variables: { id: number }) => {
       return gqlClient.request<{ id: number }>({
-        document: addCreditMutation,
+        document: removeCreditMutation,
         variables,
       });
     },
   });
 
-  return { addCreditMutation: mutate, isPending };
+  return {
+    addCreditMutation: addCreditMutate,
+    isAddCreditMutationPending,
+    removeCreditMutation: removeCreditMutate,
+    isRemoveCreditMutationPending,
+  };
 };

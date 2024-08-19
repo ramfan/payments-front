@@ -3,6 +3,7 @@ export const ru = {
     buttons: {
       signIn: "Авторизоваться",
       add: "Добавить",
+      remove: "Удалить",
     },
     links: {
       signUp: "Зарегистрироваться",

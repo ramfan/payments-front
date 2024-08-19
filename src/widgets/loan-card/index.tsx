@@ -66,7 +66,12 @@ const LoanDrawer: FC<{
   loanData?: TCredit;
 }> = ({ isOpened, setIsOpened, loanData }) => {
   const { t } = useTranslation();
-  const { addCreditMutation, isPending } = useCreditMutation();
+  const {
+    addCreditMutation,
+    isAddCreditMutationPending,
+    removeCreditMutation,
+    isRemoveCreditMutationPending,
+  } = useCreditMutation();
   const invalidateSafeData = useInvalidateSafeData();
   const options = useLoanSelectOptions();
   const methods = useForm<TLoanDrawerFormFields>({
@@ -92,6 +97,11 @@ const LoanDrawer: FC<{
       : undefined,
   });
 
+  const handleSuccesRequest = async () => {
+    await invalidateSafeData();
+    setIsOpened(false);
+  };
+
   const handleSubmit = methods.handleSubmit((fields) => {
     addCreditMutation(
       {
@@ -99,22 +109,40 @@ const LoanDrawer: FC<{
         start_date: dayjs(fields.start_date).format("YYYY-MM-DD"),
       },
       {
-        onSuccess: async () => {
-          await invalidateSafeData();
-          setIsOpened(false);
-        },
+        onSuccess: handleSuccesRequest,
       },
     );
   });
+
+  const handleRemove = () => {
+    if (loanData) {
+      removeCreditMutation(
+        { id: loanData.id },
+        { onSuccess: handleSuccesRequest },
+      );
+    }
+  };
 
   return (
     <Drawer
       open={isOpened}
       onClose={() => setIsOpened(false)}
       footer={
-        !loanData && (
-          <Button form="loan-form" htmlType="submit" loading={isPending}>
+        !loanData ? (
+          <Button
+            form="loan-form"
+            htmlType="submit"
+            loading={isAddCreditMutationPending}
+          >
             {t("buttons.add")}
+          </Button>
+        ) : (
+          <Button
+            loading={isRemoveCreditMutationPending}
+            danger
+            onClick={handleRemove}
+          >
+            {t("buttons.remove")}
           </Button>
         )
       }
