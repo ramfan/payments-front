@@ -103,7 +103,7 @@ const LoanDrawer: FC<{
       : undefined,
   });
 
-  const handleSuccesRequest = async () => {
+  const handleSuccessRequest = async () => {
     await invalidateSafeData();
     setIsOpened(false);
   };
@@ -115,7 +115,7 @@ const LoanDrawer: FC<{
         start_date: dayjs(fields.start_date).format("YYYY-MM-DD"),
       },
       {
-        onSuccess: handleSuccesRequest,
+        onSuccess: handleSuccessRequest,
       },
     );
   });
@@ -124,7 +124,7 @@ const LoanDrawer: FC<{
     if (loanData) {
       removeCreditMutation(
         { id: loanData.id },
-        { onSuccess: handleSuccesRequest },
+        { onSuccess: handleSuccessRequest },
       );
     }
   };
