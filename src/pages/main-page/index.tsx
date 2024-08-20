@@ -7,14 +7,6 @@ import "./styles.scss";
 export const MainPage = () => {
   const { data, isLoading } = useSelfData();
 
-  if (isLoading) {
-    return (
-      <MainLayout>
-        <Spin />
-      </MainLayout>
-    );
-  }
-
   return (
     <MainLayout>
       {isLoading ? (
