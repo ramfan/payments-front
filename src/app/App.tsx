@@ -16,18 +16,30 @@ i18n.use(initReactI18next).init({
 
 const queryClient = new QueryClient();
 
-const env = {
-  baseUrl: "http://localhost:8080/graphql",
-};
-
 export const App = () => {
+  const config = useServerConfig();
+
   return (
     <QueryClientProvider client={queryClient}>
-      <ConfigProvider env={env}>
+      <ConfigProvider env={config}>
         <BrowserRouter>
           <AppRoutes />
         </BrowserRouter>
       </ConfigProvider>
     </QueryClientProvider>
   );
+};
+
+const useServerConfig = () => {
+  const localEnv = {
+    baseUrl: "http://localhost:8080/graphql",
+  };
+
+  const remoteEnv = {
+    baseUrl: window.location.origin + "/graphql",
+  };
+
+  const isDev = process.env.NODE_ENV === "development";
+
+  return isDev ? localEnv : remoteEnv;
 };

@@ -10,4 +10,8 @@ export default defineConfig({
       "@payment-front": path.resolve(__dirname, "./src"),
     },
   },
+  define: {
+    "process.env": {},
+  },
+  logLevel: "error",
 });
