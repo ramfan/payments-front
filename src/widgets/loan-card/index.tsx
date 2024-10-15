@@ -1,5 +1,5 @@
 import cn from "classnames";
-import { Button, Card, Drawer, Flex } from "antd";
+import { Button, Card, Drawer, Flex, Tag } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
 import { FC, useState } from "react";
 import {
@@ -31,28 +31,22 @@ export const LoanCard: FC<{ loanData?: TCredit; className?: string }> = ({
 }) => {
   const { t } = useTranslation();
   const [isDrawerOpened, setIsDrawerOpened] = useState(false);
-  const loanTitleByType = useLoanTitles();
-
-  const cardTitle =
-    loanData?.creditType && loanTitleByType[loanData.creditType];
-
-  const creditName = loanData?.name && `(${loanData?.name})`;
+  const titles = useLoanTitles();
 
   return (
     <>
       <Card onClick={() => setIsDrawerOpened(true)} className={cn(className)}>
-        {!cardTitle ? (
+        {!loanData?.creditType ? (
           <>
             <PlusOutlined />
             &nbsp;
             {t("buttons.add")}
           </>
-        ) : creditName ? (
-          <>
-            {cardTitle}&nbsp;{creditName}
-          </>
         ) : (
-          cardTitle
+          <Flex vertical gap="8px">
+            {loanData?.name ?? titles[loanData?.creditType]}
+            <LoanTag type={loanData?.creditType} />
+          </Flex>
         )}
       </Card>
       <LoanDrawer
@@ -61,6 +55,25 @@ export const LoanCard: FC<{ loanData?: TCredit; className?: string }> = ({
         loanData={loanData}
       />
     </>
+  );
+};
+
+const LoanTag: FC<{ type?: keyof typeof CREDIT_TYPE }> = ({ type }) => {
+  const titles = useLoanTitles();
+
+  if (!type) {
+    return null;
+  }
+
+  const colors = {
+    [CREDIT_TYPE.CONSUMER_LOAN]: "green",
+    [CREDIT_TYPE.MORTGAGE]: "orange",
+  };
+
+  return (
+    <Tag color={colors[type]} style={{ maxWidth: "fit-content" }}>
+      {titles[type]}
+    </Tag>
   );
 };
 
@@ -156,25 +169,37 @@ const LoanDrawer: FC<{
       <form id="loan-form" onSubmit={handleSubmit}>
         <FormProvider {...methods}>
           <Flex gap="14px" vertical>
-            <InputFormField name="name" label={t("label.nameOrGoal")} />
+            <InputFormField
+              name="name"
+              label={t("label.nameOrGoal")}
+              disabled={!!loanData}
+            />
             <InputNumberFormField
               name="credit_size"
               label={t("label.creditSize")}
+              disabled={!!loanData}
             />
-            <InputNumberFormField name="percent" label={t("label.percent")} />
+            <InputNumberFormField
+              name="percent"
+              label={t("label.percent")}
+              disabled={!!loanData}
+            />
             <DatePickerFormField
               label={t("label.wasTaken")}
               name="start_date"
               format={"DD.MM.YYYY"}
+              disabled={!!loanData}
             />
             <InputNumberFormField
               name="months_count"
               label={t("label.loanTerm")}
+              disabled={!!loanData}
             />
             <SelectFormField
               options={options}
               name="credit_type"
               label={t("label.creditType")}
+              disabled={!!loanData}
             />
           </Flex>
         </FormProvider>

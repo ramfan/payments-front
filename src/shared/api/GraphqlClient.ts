@@ -25,7 +25,6 @@ export class GraphqlClient {
           }
         }
       },
-      errorPolicy: "all",
     });
   }
 

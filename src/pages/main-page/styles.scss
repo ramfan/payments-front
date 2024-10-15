@@ -1,4 +1,12 @@
 .card {
+  display: flex;
+  align-items: center;
   max-width: 400px;
   min-width: 200px;
+  cursor: pointer;
+
+  @media (max-width: 500px) {
+    width: 100%;
+    max-width: initial;
+  }
 }

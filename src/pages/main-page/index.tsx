@@ -12,7 +12,7 @@ export const MainPage = () => {
       {isLoading ? (
         <Spin />
       ) : (
-        <Flex gap="12px">
+        <Flex gap="12px" wrap="wrap">
           <LoanCard className="card" />
           {data?.creditSet?.map((credit) => (
             <LoanCard key={credit.id} className="card" loanData={credit} />
